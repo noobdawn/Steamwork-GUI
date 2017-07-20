@@ -41,7 +41,14 @@ namespace SteamworkGUI
         public static void LoadData()
         {
             string filename= Environment.CurrentDirectory + "/data.xml";
-            if (!File.Exists(filename)) return;
+            if (!File.Exists(filename))
+            {
+                //如果没有，就载入默认的设置避免报错
+                //if not data.xml exists, set MainWindow as a default setting which can avoid throwing exceptions
+                MainWindow._instance.LanguagePack = "en-US";
+                MainWindow._instance.LoginWindow.account.Text = "";
+                return;
+            }
             XmlDocument xmlDoc = new XmlDocument();
             try
             {
@@ -53,11 +60,11 @@ namespace SteamworkGUI
                     MainWindow._instance.user_name=MainWindow._instance.LoginWindow.account.Text= (root.SelectSingleNode("account")).InnerText;
                     MainWindow._instance.Appid =int.Parse((root.SelectSingleNode("appid")).InnerText);
                     MainWindow._instance.AppidInput.Value = MainWindow._instance.Appid;
-                   
                 }
                 else
                 {
-
+                    MainWindow._instance.LanguagePack = "en-US";
+                    MainWindow._instance.LoginWindow.account.Text = "";
                 }
             }
             catch (Exception e)
